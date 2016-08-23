@@ -2,7 +2,10 @@
 
 include "gumtreefunc.php";
 
-// retrive HTML into DOM
+function get_gumtree_add_info($url) {
+	return fetch($url)["content"];
+}
+
 $res = fetch("http://www.gumtree.co.za/post.html?adId=".$_GET["adId"]."&guid=".$_GET["guid"]);
 $html = str_get_html($res["content"]);
 
@@ -14,20 +17,19 @@ $postData = array(
 	"latitude" => "-33.844167",
 	"longitude" => "18.698611",
 
-	// these two have to be the same
-	"prevMapAddress" => "Shop Wherever, Whenever, Cape Town",
-	"Address" => "Shop Wherever, Whenever, Cape Town",
+        // these two have to be the same
+        "prevMapAddress" => "Shop Wherever, Whenever, Cape Town",
+        "Address" => "Shop Wherever, Whenever, Cape Town",
 
 	"currencyValues" => "ZAR",
-	"UserName" => "Your Shop",
-	"Email" => "your-email",
-	"WebSiteUrl" => "your-website.com",
+        "UserName" => "Your Shop",
+        "Email" => "your-email",
+        "WebSiteUrl" => "your-website.com",,
 	"adminAreaName" => "",
 	"u" => "",
 );
 foreach($html->find("form#postAdForm")[0]->children() as $child) {
 	if($child->type == "hidden") {
-		// capture required fields into array
 		$postData[$child->name] = $child->value;
 	} else if($child->tag == "div" && $child->id == "postForm") {
 		// ad title
@@ -43,7 +45,7 @@ foreach($html->find("form#postAdForm")[0]->children() as $child) {
 			if($opt->selected == 1) {
 				$adPrice = $child->children(7)->children(3)->children(0);
 				$postData[$adPrice->name] = $opt->value;
-				// check if price is fixed, then add the price
+				// check if price is fixed, then add price
 				if($opt->value == "FIXED") {
 					$postData["Price"] = $child->children(7)->children(4)->children(0)->value;
 				}
@@ -55,13 +57,11 @@ foreach($html->find("form#postAdForm")[0]->children() as $child) {
 		$postData[$adName->name] = $adName->value;
 	}
 }
-// required for it to repost
 unset($postData["adId"]);
 $postData["completenessPercentage"] = "85"; // a default value, it resets when page loads
-$postData["machineId"] = "get-this-from-cookies";
-$postData["_mrk_trk"] = "get-this-from-cookies";
+$postData["machineId"] = "56b9da8f-a4d4-41f0-a28d-6a3d1b77c05e-15621000944";
+$postData["_mrk_trk"] = "id:038-AZF-323&token:_mch-gumtree.co.za-1468933337232-41877";
 
-// repost and show if successful or failed
 parse_str(parse_url(fetch("http://www.gumtree.co.za/post.html", array("post" => $postData))["redirect_url"], PHP_URL_QUERY), $strout);
 printf("The ad repost was %ssuccessful", $strout["activateStatus"] == "adActivateSuccess" ? "" : "un");
 

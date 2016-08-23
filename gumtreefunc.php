@@ -1,8 +1,6 @@
 <?php
 
 include "simpledom/simple_html_dom.php";
-
-// this is a simple function the calls CURL
 function fetch($url, $args = null, $bypass = false) {
 
 	$cookie_file_path 	= dirname(__FILE__)."/cookie.txt"; // php cookie jar
