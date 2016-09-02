@@ -1,12 +1,9 @@
 <?php
 
+include "config.php";
 include "gumtreefunc.php";
 
-//username and password of account
-$username = "user";
-$password = "pass";
-
-fetch("https://www.gumtree.co.za/login",  array('post' => array('redirect' => 'https://gumtree.co.za/', 'email' => $username, 'password' => $password)), true);
+fetch("https://www.gumtree.co.za/login",  array('post' => array('redirect' => 'https://gumtree.co.za/', 'email' => $_config->username, 'password' => $_config->password)), true);
 
 $html = str_get_html(fetch("https://www.gumtree.co.za/my/ads.html")["content"]); // login to gumtree
 

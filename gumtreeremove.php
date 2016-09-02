@@ -1,10 +1,8 @@
 <?php
 
+include "config.php";
 include "gumtreefunc.php";
 
-function get_gumtree_add_info($url) {
-	return fetch($url)["content"];
-}
 $getData = array(
 	"adId" => $_GET["adId"],
 	"guid" => $_get["guid"],
