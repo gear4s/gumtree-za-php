@@ -2,9 +2,15 @@
 
 include "simpledom/simple_html_dom.php";
 function fetch($url, $args = null, $bypass = false) {
+	if(isset($args["get"])) {
+		$url .= "?";
+		foreach($args["get"] as $aK => $aV) {
+			$url .= $aK."=".$aV."&";
+		}
+	}
 
 	$cookie_file_path 	= dirname(__FILE__)."/cookie.txt"; // php cookie jar
-	$options			= array( // cURL options
+	$options		= array( // cURL options
 		CURLOPT_HEADER 			=> false,
 		CURLOPT_NOBODY			=> false,
 		CURLOPT_URL 			=> $url,
@@ -33,7 +39,7 @@ function fetch($url, $args = null, $bypass = false) {
 		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($args["post"]));
 	}
 
-	$roughresult 	= curl_exec($ch);
+	$roughresult		= curl_exec($ch);
 	$err     		= curl_errno( $ch );
 	$errmsg  		= curl_error( $ch );
 	$header  		= curl_getinfo( $ch );

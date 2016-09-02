@@ -9,22 +9,21 @@ function get_gumtree_add_info($url) {
 $res = fetch("http://www.gumtree.co.za/post.html?adId=".$_GET["adId"]."&guid=".$_GET["guid"]);
 $html = str_get_html($res["content"]);
 
-// some default values
-// you should capture most of these from inspecting element of the post page
 $postData = array(
 	"ForSaleBy" => "delr",
 	"Phone" => "0212345678",
 	"latitude" => "-33.844167",
 	"longitude" => "18.698611",
 
-        // these two have to be the same
-        "prevMapAddress" => "Shop Wherever, Whenever, Cape Town",
+	// these two have to be the same
+	"prevMapAddress" => "Shop Wherever, Whenever, Cape Town",
         "Address" => "Shop Wherever, Whenever, Cape Town",
-
 	"currencyValues" => "ZAR",
-        "UserName" => "Your Shop",
-        "Email" => "your-email",
-        "WebSiteUrl" => "your-website.com",,
+
+	"UserName" => "Your Shop",
+	"Email" => "your-email",
+	"WebSiteUrl" => "your-website",
+
 	"adminAreaName" => "",
 	"u" => "",
 );
@@ -45,7 +44,7 @@ foreach($html->find("form#postAdForm")[0]->children() as $child) {
 			if($opt->selected == 1) {
 				$adPrice = $child->children(7)->children(3)->children(0);
 				$postData[$adPrice->name] = $opt->value;
-				// check if price is fixed, then add price
+				// check if price is fixed
 				if($opt->value == "FIXED") {
 					$postData["Price"] = $child->children(7)->children(4)->children(0)->value;
 				}
