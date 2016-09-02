@@ -1,5 +1,6 @@
 <?php
 
+include "config.php";
 include "gumtreefunc.php";
 
 function get_gumtree_add_info($url) {
@@ -10,20 +11,16 @@ $res = fetch("http://www.gumtree.co.za/post.html?adId=".$_GET["adId"]."&guid=".$
 $html = str_get_html($res["content"]);
 
 $postData = array(
-	"ForSaleBy" => "delr",
-	"Phone" => "0212345678",
+	"ForSaleBy" => $_config->forSaleBy,
+	"Phone" => $_config->phoneNumber,
 	"latitude" => "-33.844167",
 	"longitude" => "18.698611",
-
-	// these two have to be the same
-	"prevMapAddress" => "Shop Wherever, Whenever, Cape Town",
-        "Address" => "Shop Wherever, Whenever, Cape Town",
+	"prevMapAddress" => $_config->physicalAddress,
+	"Address" => $_config->physicalAddress,
 	"currencyValues" => "ZAR",
-
-	"UserName" => "Your Shop",
-	"Email" => "your-email",
-	"WebSiteUrl" => "your-website",
-
+	"UserName" => $_config->shopName,
+	"Email" => $_config->shopEmail,
+	"WebSiteUrl" => $_config->websiteURL,
 	"adminAreaName" => "",
 	"u" => "",
 );
@@ -57,9 +54,9 @@ foreach($html->find("form#postAdForm")[0]->children() as $child) {
 	}
 }
 unset($postData["adId"]);
-$postData["completenessPercentage"] = "85"; // a default value, it resets when page loads
-$postData["machineId"] = "56b9da8f-a4d4-41f0-a28d-6a3d1b77c05e-15621000944";
-$postData["_mrk_trk"] = "id:038-AZF-323&token:_mch-gumtree.co.za-1468933337232-41877";
+$postData["completenessPercentage"] = "85";
+$postData["machineId"] = $_config->machineId;
+$postData["_mrk_trk"] = $_config->_mrk_trk;
 
 parse_str(parse_url(fetch("http://www.gumtree.co.za/post.html", array("post" => $postData))["redirect_url"], PHP_URL_QUERY), $strout);
 printf("The ad repost was %ssuccessful", $strout["activateStatus"] == "adActivateSuccess" ? "" : "un");
