@@ -3,12 +3,9 @@
 include "config.php";
 include "gumtreefunc.php";
 
-function get_gumtree_add_info($url) {
-	return fetch($url)["content"];
-}
-
-$res = fetch("http://www.gumtree.co.za/post.html?adId=".$_GET["adId"]."&guid=".$_GET["guid"]);
+$res = fetch("https://www.gumtree.co.za/post.html", array("get" => array("adId" => $_GET["adId"], "guid" => $_GET["guid"])));
 $html = str_get_html($res["content"]);
+if(!$html) {var_dump($res); return;}
 
 $postData = array(
 	"ForSaleBy" => $_config->forSaleBy,
@@ -58,7 +55,7 @@ $postData["completenessPercentage"] = "85";
 $postData["machineId"] = $_config->machineId;
 $postData["_mrk_trk"] = $_config->_mrk_trk;
 
-parse_str(parse_url(fetch("http://www.gumtree.co.za/post.html", array("post" => $postData))["redirect_url"], PHP_URL_QUERY), $strout);
+parse_str(parse_url(fetch("https://www.gumtree.co.za/post.html", array("post" => $postData))["redirect_url"], PHP_URL_QUERY), $strout);
 printf("The ad repost was %ssuccessful", $strout["activateStatus"] == "adActivateSuccess" ? "" : "un");
 
 ?>

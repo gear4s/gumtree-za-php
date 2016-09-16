@@ -11,6 +11,6 @@ $getData = array(
 	"r" => floor(rand()*100)+1
 );
 
-parse_str(parse_url(fetch("http://www.gumtree.co.za/deleteAd.html", array("get" => $getData))["redirect_url"], PHP_URL_QUERY), $strout);
+parse_str(parse_url(fetch("https://www.gumtree.co.za/deleteAd.html", array("get" => $getData))["redirect_url"], PHP_URL_QUERY), $strout);
 
 ?>
